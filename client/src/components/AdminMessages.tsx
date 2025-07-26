@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { messageService } from '../services/api';
 import { Message } from '../types';
 import './AdminMessages.css';
 
@@ -15,8 +15,8 @@ const AdminMessages: React.FC = () => {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<Message[]>('/api/messages');
-      setMessages(response.data);
+      const messages = await messageService.getAll();
+      setMessages(messages);
       setError('');
     } catch (error) {
       setError('Error fetching messages');
