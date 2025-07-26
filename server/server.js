@@ -10,7 +10,9 @@ const app = express();
 // CORS configuration - whitelist allowed origins for frontend requests
 const allowedOrigins = [
   'https://twinkle-jewellery.onrender.com', // Production frontend
-  'http://localhost:3000'                    // Local development frontend
+  'http://localhost:3000',                    // Local development frontend
+  'https://www.twinklesjewellery.in',        // Custom domain with www
+  'https://twinklesjewellery.in'             // Custom domain without www
 ];
 
 const corsOptions = {
