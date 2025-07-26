@@ -16,7 +16,9 @@ const Navigation: React.FC<NavigationProps> = ({ isAdmin, setIsAdmin }) => {
         
         <ul className="nav-links">
           <li><Link to="/">Products</Link></li>
+          <li><Link to="/contact">Contact Support</Link></li>
           {isAdmin && <li><Link to="/admin">Admin Panel</Link></li>}
+          {isAdmin && <li><Link to="/messages">Messages</Link></li>}
         </ul>
         
         <div className="admin-toggle">

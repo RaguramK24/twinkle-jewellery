@@ -5,6 +5,8 @@ import Navigation from './components/Navigation';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import AdminPanel from './components/AdminPanel';
+import ContactForm from './components/ContactForm';
+import AdminMessages from './components/AdminMessages';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,7 +19,9 @@ function App() {
           <Routes>
             <Route path="/" element={<ProductList />} />
             <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/contact" element={<ContactForm />} />
             <Route path="/admin" element={<AdminPanel isAdmin={isAdmin} />} />
+            <Route path="/messages" element={<AdminMessages />} />
           </Routes>
         </main>
       </Router>

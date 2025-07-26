@@ -24,3 +24,11 @@ export interface ProductFormData {
   category: string;
   image?: File;
 }
+
+export interface Message {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  timestamp: string;
+}
