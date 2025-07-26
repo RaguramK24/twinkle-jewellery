@@ -1,0 +1,2 @@
+# This file keeps the uploads directory in git but ignores its contents
+# Images will be stored here when uploaded via the admin panel
