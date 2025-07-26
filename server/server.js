@@ -6,8 +6,28 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
+// CORS configuration - whitelist allowed origins for frontend requests
+const allowedOrigins = [
+  'https://twinkle-jewellery.onrender.com', // Production frontend
+  'http://localhost:3000'                    // Local development frontend
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
