@@ -28,10 +28,7 @@ const corsOptions = {
 };
 
 // Middleware
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://www.twinklesjewellery.in' : 'http://localhost:3000',
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
