@@ -294,7 +294,7 @@ If you prefer to configure manually instead of using the `render.yaml` file:
    - Repository: Your GitHub repository
    - Branch: `main` (or your preferred branch)
    - Runtime: `Node`
-   - Build Command: `npm run install-all && npm run build-client`
+   - Build Command: `npm install && npm run heroku-postbuild`
    - Start Command: `npm start`
 
 2. **Advanced Settings**
