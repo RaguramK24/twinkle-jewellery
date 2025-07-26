@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: twinkle-jewellery
+    env: node
+    plan: free
+    buildCommand: npm run install-all && npm run build-client
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    disk:
+      name: twinkle-jewellery-disk
+      mountPath: /opt/render/project/src/server/uploads
+      sizeGB: 1

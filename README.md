@@ -255,6 +255,165 @@ REACT_APP_ADMIN_KEY=admin123
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Deployment on Render
+
+This application is configured for easy deployment on [Render](https://render.com), a modern cloud platform that offers free hosting for static sites and web services.
+
+### Prerequisites for Deployment
+
+1. A [Render account](https://render.com) (free to create)
+2. Your code pushed to a GitHub repository
+3. (Optional) A custom domain registered with GoDaddy or another domain provider
+
+### Deploy to Render
+
+#### Option 1: Automatic Deployment (Recommended)
+
+1. **Connect Your Repository**
+   - Log in to your Render account
+   - Click "New +" and select "Web Service"
+   - Connect your GitHub account and select your repository
+   - Render will automatically detect the `render.yaml` configuration
+
+2. **Configure Environment Variables**
+   - Render will use the settings from `render.yaml`
+   - Set your `ADMIN_KEY` in the Render dashboard under Environment Variables
+   - All other settings (Node environment, build commands) are pre-configured
+
+3. **Deploy**
+   - Click "Create Web Service"
+   - Render will automatically build and deploy your application
+   - The build process will install dependencies and build the React client
+   - Your app will be available at `https://your-app-name.onrender.com`
+
+#### Option 2: Manual Configuration
+
+If you prefer to configure manually instead of using the `render.yaml` file:
+
+1. **Create a New Web Service**
+   - Repository: Your GitHub repository
+   - Branch: `main` (or your preferred branch)
+   - Runtime: `Node`
+   - Build Command: `npm run install-all && npm run build-client`
+   - Start Command: `npm start`
+
+2. **Advanced Settings**
+   - Plan: `Free`
+   - Node Version: `18` (or later)
+   - Health Check Path: `/api/health`
+
+3. **Environment Variables**
+   ```
+   NODE_ENV=production
+   PORT=10000
+   ADMIN_KEY=your-secure-admin-key
+   ```
+
+### Custom Domain Setup with GoDaddy
+
+Once your app is deployed on Render, you can connect a custom domain purchased from GoDaddy.
+
+#### Step 1: Configure Domain in Render
+
+1. **Add Custom Domain**
+   - Go to your Render service dashboard
+   - Navigate to "Settings" → "Custom Domains"
+   - Click "Add" and enter your domain (e.g., `www.twinklesjewellery.in`)
+   - Render will provide you with a CNAME target (e.g., `your-app.onrender.com`)
+
+#### Step 2: Configure DNS Records in GoDaddy
+
+1. **Access GoDaddy DNS Management**
+   - Log in to your [GoDaddy account](https://account.godaddy.com)
+   - Go to "My Products" → "Domains"
+   - Click on your domain name
+   - Select "DNS" → "Manage Zones"
+
+2. **Add DNS Records**
+
+   For `www.twinklesjewellery.in`:
+   ```
+   Type: CNAME
+   Name: www
+   Value: your-app-name.onrender.com
+   TTL: 600 (10 minutes)
+   ```
+
+   For root domain redirect (optional):
+   ```
+   Type: A
+   Name: @
+   Value: 76.76.19.61
+   TTL: 600
+   ```
+   Note: This IP redirects to www subdomain. Check Render's documentation for current IPs.
+
+3. **SSL Certificate**
+   - Render automatically provides SSL certificates for custom domains
+   - After DNS propagation (usually 10-60 minutes), your site will be available with HTTPS
+
+#### Step 3: Update Application Configuration
+
+1. **Update Client Environment**
+   - In your client/.env file, update the API URL if needed:
+   ```
+   REACT_APP_API_URL=https://www.twinklesjewellery.in/api
+   ```
+
+2. **CORS Configuration**
+   - Update server CORS settings to allow your custom domain:
+   ```javascript
+   app.use(cors({
+     origin: ['https://www.twinklesjewellery.in', 'http://localhost:3000']
+   }));
+   ```
+
+### Deployment Best Practices
+
+1. **Environment Variables**
+   - Never commit sensitive information like admin keys to your repository
+   - Use Render's environment variable feature for sensitive data
+   - Different environments (development, production) should have different keys
+
+2. **Database Considerations**
+   - This app uses JSON file storage, which works for the free tier
+   - For production apps with high traffic, consider migrating to a proper database
+   - Render offers PostgreSQL databases on paid plans
+
+3. **File Uploads**
+   - Uploaded images are stored on Render's ephemeral file system
+   - For permanent file storage, consider using cloud storage (AWS S3, Cloudinary)
+   - The current setup includes a persistent disk for file uploads
+
+4. **Monitoring**
+   - Use Render's built-in logs and metrics
+   - Monitor your app's performance in the Render dashboard
+   - Set up alerts for downtime or errors
+
+### Troubleshooting Deployment
+
+**Build Fails:**
+- Check that all dependencies are in package.json
+- Ensure Node version compatibility (14+)
+- Review build logs in Render dashboard
+
+**App Won't Start:**
+- Verify the start command: `npm start`
+- Check for missing environment variables
+- Review server logs for specific error messages
+
+**Custom Domain Issues:**
+- Verify DNS records are correct and propagated
+- Use tools like `dig` or online DNS checkers
+- Allow 24-48 hours for full DNS propagation
+
+**File Upload Issues:**
+- Check that the uploads directory exists
+- Verify file size limits (5MB default)
+- For persistent files, ensure disk storage is properly configured
+
+For more detailed information, visit the [Render Documentation](https://render.com/docs).
+
 ## Support
 
 If you encounter any issues or have questions, please file an issue on the GitHub repository.
