@@ -13,15 +13,18 @@ A complete jewellery catalog application built with the MERN stack (Modern Expre
 - Responsive design for all devices
 
 ### Admin Features
+- Secure JWT-based authentication system
 - Create, edit, and delete products
 - Manage categories
 - Upload product images
-- Admin toggle in navigation (no authentication required - development mode)
+- View customer support messages
+- Protected admin routes with login/logout
 
 ## Technology Stack
 
-- **Backend**: Node.js, Express.js, JSON file-based data storage
-- **Frontend**: React with TypeScript, React Router
+- **Backend**: Node.js, Express.js, JWT authentication, JSON file-based data storage
+- **Frontend**: React with TypeScript, React Router, Authentication Context
+- **Security**: JWT tokens, bcrypt password hashing, protected routes
 - **File Upload**: Multer for image handling
 - **Styling**: Plain CSS with responsive design
 - **Domain**: Custom domain at www.twinklesjewellery.in
@@ -110,7 +113,6 @@ cp .env.example .env
 
 # Edit .env file if needed
 # REACT_APP_API_URL=http://localhost:5000/api
-# REACT_APP_ADMIN_KEY=admin123
 
 # Start the React development server
 npm start
@@ -138,10 +140,17 @@ Default categories are automatically created on first startup.
 
 ### For Admin Users
 
-1. Toggle "Admin Mode" in the navigation bar
-2. Visit the "Admin Panel" from the navigation
-3. Add/edit/delete categories and products
-4. Upload product images
+1. Click "Admin Login" in the navigation bar
+2. Login with admin credentials:
+   - **Email**: ragurameee24@gmail.com
+   - **Password**: Admin@123
+3. Access the "Admin Panel" and "Messages" from the navigation
+4. Add/edit/delete categories and products
+5. Upload product images
+6. View customer support messages
+7. Click "Logout" when finished
+
+For detailed admin authentication information, see [ADMIN_AUTH_GUIDE.md](./ADMIN_AUTH_GUIDE.md).
 
 ## API Endpoints
 
