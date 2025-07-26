@@ -18,6 +18,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/products', require('./routes/products'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/messages', require('./routes/messages'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -58,7 +59,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/twinkle-j
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);
-    process.exit(1);
+    console.log('Server will continue without MongoDB (some features may not work)');
   });
 
 const PORT = process.env.PORT || 5000;
