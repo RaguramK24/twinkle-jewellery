@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
@@ -28,6 +29,18 @@ const corsOptions = {
   },
   credentials: true
 };
+
+// Ensure uploads directory exists
+const ensureUploadsDirectory = () => {
+  const uploadsDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('Created uploads directory:', uploadsDir);
+  }
+};
+
+// Create uploads directory if it doesn't exist
+ensureUploadsDirectory();
 
 // Middleware
 app.use(cors(corsOptions));
