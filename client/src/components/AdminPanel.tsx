@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Product, Category, ProductFormData } from '../types';
 import { productService, categoryService } from '../services/api';
 
-interface AdminPanelProps {
-  isAdmin: boolean;
-}
-
-const AdminPanel: React.FC<AdminPanelProps> = ({ isAdmin }) => {
+const AdminPanel: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,10 +26,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isAdmin }) => {
   });
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchData();
-    }
-  }, [isAdmin]);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -129,17 +123,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isAdmin }) => {
     if (!imageName) return '';
     return `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/uploads/${imageName}`;
   };
-
-  if (!isAdmin) {
-    return (
-      <div className="admin-panel">
-        <div className="admin-access-denied">
-          <h2>Access Denied</h2>
-          <p>Please enable Admin Mode in the navigation to access this panel.</p>
-        </div>
-      </div>
-    );
-  }
 
   if (loading) {
     return <div className="loading">Loading admin panel...</div>;

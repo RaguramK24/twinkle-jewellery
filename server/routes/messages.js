@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
+const { adminAuth } = require('../middleware/auth');
 
 // POST /api/messages - Submit a new message
 router.post('/', async (req, res) => {
@@ -24,7 +25,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/messages - Get all messages (for admin)
-router.get('/', async (req, res) => {
+router.get('/', adminAuth, async (req, res) => {
   try {
     const messages = await Message.findSorted();
     res.json(messages);

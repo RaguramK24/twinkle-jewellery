@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { messageService } from '../services/api';
 import './ContactForm.css';
 
 interface FormData {
@@ -36,7 +36,7 @@ const ContactForm: React.FC = () => {
     }
 
     try {
-      await axios.post('/api/messages', formData);
+      await messageService.create(formData);
       setStatus('Message sent successfully!');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {

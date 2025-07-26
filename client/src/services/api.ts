@@ -2,10 +2,10 @@ import axios from 'axios';
 import { Product, Category, ProductFormData } from '../types';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const ADMIN_KEY = process.env.REACT_APP_ADMIN_KEY || 'admin123';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true, // Include cookies in requests
 });
 
 // Product services
@@ -37,7 +37,6 @@ export const productService = {
     const response = await api.post('/products', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'admin-key': ADMIN_KEY,
       },
     });
     return response.data;
@@ -58,7 +57,6 @@ export const productService = {
     const response = await api.put(`/products/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'admin-key': ADMIN_KEY,
       },
     });
     return response.data;
@@ -66,11 +64,7 @@ export const productService = {
 
   // Delete product (admin only)
   delete: async (id: string): Promise<void> => {
-    await api.delete(`/products/${id}`, {
-      headers: {
-        'admin-key': ADMIN_KEY,
-      },
-    });
+    await api.delete(`/products/${id}`);
   },
 };
 
@@ -90,30 +84,33 @@ export const categoryService = {
 
   // Create category (admin only)
   create: async (categoryData: { name: string; description: string }): Promise<Category> => {
-    const response = await api.post('/categories', categoryData, {
-      headers: {
-        'admin-key': ADMIN_KEY,
-      },
-    });
+    const response = await api.post('/categories', categoryData);
     return response.data;
   },
 
   // Update category (admin only)
   update: async (id: string, categoryData: { name: string; description: string }): Promise<Category> => {
-    const response = await api.put(`/categories/${id}`, categoryData, {
-      headers: {
-        'admin-key': ADMIN_KEY,
-      },
-    });
+    const response = await api.put(`/categories/${id}`, categoryData);
     return response.data;
   },
 
   // Delete category (admin only)
   delete: async (id: string): Promise<void> => {
-    await api.delete(`/categories/${id}`, {
-      headers: {
-        'admin-key': ADMIN_KEY,
-      },
-    });
+    await api.delete(`/categories/${id}`);
+  },
+};
+
+// Message services
+export const messageService = {
+  // Get all messages (admin only)
+  getAll: async (): Promise<any[]> => {
+    const response = await api.get('/messages');
+    return response.data;
+  },
+
+  // Submit a new message (public)
+  create: async (messageData: { name: string; email: string; message: string }): Promise<any> => {
+    const response = await api.post('/messages', messageData);
+    return response.data;
   },
 };
