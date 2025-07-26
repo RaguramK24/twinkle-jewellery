@@ -11,13 +11,11 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
     
-    const newMessage = new Message({
+    const savedMessage = await Message.save({
       name,
       email,
       message
     });
-    
-    const savedMessage = await newMessage.save();
     res.status(201).json(savedMessage);
   } catch (error) {
     console.error('Error saving message:', error);
@@ -28,7 +26,7 @@ router.post('/', async (req, res) => {
 // GET /api/messages - Get all messages (for admin)
 router.get('/', async (req, res) => {
   try {
-    const messages = await Message.find().sort({ timestamp: -1 });
+    const messages = await Message.findSorted();
     res.json(messages);
   } catch (error) {
     console.error('Error fetching messages:', error);

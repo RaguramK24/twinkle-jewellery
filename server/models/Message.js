@@ -1,25 +1,39 @@
-const mongoose = require('mongoose');
+const JsonStorage = require('../utils/jsonStorage');
 
-const MessageSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  message: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now
+class Message {
+  constructor() {
+    this.storage = new JsonStorage('messages');
   }
-});
 
-module.exports = mongoose.model('Message', MessageSchema);
+  async save(messageData) {
+    // Validate required fields
+    if (!messageData.name || !messageData.name.trim()) {
+      throw new Error('Name is required');
+    }
+    if (!messageData.email || !messageData.email.trim()) {
+      throw new Error('Email is required');
+    }
+    if (!messageData.message || !messageData.message.trim()) {
+      throw new Error('Message is required');
+    }
+
+    return this.storage.create({
+      name: messageData.name.trim(),
+      email: messageData.email.trim(),
+      message: messageData.message.trim(),
+      timestamp: new Date()
+    });
+  }
+
+  async find() {
+    return this.storage.findAll();
+  }
+
+  // Method to sort messages by timestamp descending
+  async findSorted() {
+    const messages = this.storage.findAll();
+    return messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }
+}
+
+module.exports = new Message();
