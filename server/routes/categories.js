@@ -31,12 +31,10 @@ router.post('/', adminAuth, async (req, res) => {
   try {
     const { name, description } = req.body;
     
-    const category = new Category({
+    const savedCategory = await Category.save({
       name,
       description: description || ''
     });
-    
-    const savedCategory = await category.save();
     res.status(201).json(savedCategory);
   } catch (error) {
     if (error.code === 11000) {

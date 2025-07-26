@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
@@ -35,32 +34,34 @@ app.use((error, req, res, next) => {
   res.status(500).json({ message: error.message });
 });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/twinkle-jewellery')
-  .then(() => {
-    console.log('Connected to MongoDB');
-    
-    // Create some default categories if none exist
+// Initialize JSON data storage (replaces MongoDB connection)
+const initializeData = async () => {
+  try {
     const Category = require('./models/Category');
-    Category.countDocuments().then(count => {
-      if (count === 0) {
-        const defaultCategories = [
-          { name: 'Rings', description: 'Beautiful rings for all occasions' },
-          { name: 'Necklaces', description: 'Elegant necklaces and chains' },
-          { name: 'Earrings', description: 'Stunning earrings collection' },
-          { name: 'Bracelets', description: 'Stylish bracelets and bangles' }
-        ];
-        
-        Category.insertMany(defaultCategories)
-          .then(() => console.log('Default categories created'))
-          .catch(err => console.error('Error creating default categories:', err));
-      }
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-    console.log('Server will continue without MongoDB (some features may not work)');
-  });
+    
+    // Check if default categories need to be created
+    const categoriesCount = await Category.countDocuments();
+    if (categoriesCount === 0) {
+      console.log('Creating default categories...');
+      const defaultCategories = [
+        { name: 'Rings', description: 'Beautiful rings for all occasions' },
+        { name: 'Necklaces', description: 'Elegant necklaces and chains' },
+        { name: 'Earrings', description: 'Stunning earrings collection' },
+        { name: 'Bracelets', description: 'Stylish bracelets and bangles' }
+      ];
+      
+      await Category.insertMany(defaultCategories);
+      console.log('Default categories created successfully');
+    }
+    
+    console.log('JSON data storage initialized');
+  } catch (err) {
+    console.error('Error initializing data storage:', err);
+  }
+};
+
+// Initialize data on startup
+initializeData();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

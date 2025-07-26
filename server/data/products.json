@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "1753544005166x4fxzp5su",
+    "name": "Test Ring",
+    "price": 299.99,
+    "description": "A beautiful test ring",
+    "category": "cat_1",
+    "image": null,
+    "createdAt": "2025-07-26T15:33:25.166Z",
+    "updatedAt": "2025-07-26T15:33:25.166Z"
+  }
+]

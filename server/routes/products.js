@@ -32,8 +32,9 @@ const upload = multer({
 // GET /api/products - Get all products (public)
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find().populate('category');
-    res.json(products);
+    const products = await Product.find();
+    const populatedProducts = await Product.populate(products, 'category');
+    res.json(populatedProducts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -42,11 +43,12 @@ router.get('/', async (req, res) => {
 // GET /api/products/:id - Get single product (public)
 router.get('/:id', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('category');
+    const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.json(product);
+    const populatedProduct = await Product.populate(product, 'category');
+    res.json(populatedProduct);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -68,9 +70,8 @@ router.post('/', adminAuth, upload.single('image'), async (req, res) => {
       productData.image = req.file.filename;
     }
 
-    const product = new Product(productData);
-    const savedProduct = await product.save();
-    const populatedProduct = await Product.findById(savedProduct._id).populate('category');
+    const savedProduct = await Product.save(productData);
+    const populatedProduct = await Product.populate(savedProduct, 'category');
     
     res.status(201).json(populatedProduct);
   } catch (error) {
@@ -98,13 +99,14 @@ router.put('/:id', adminAuth, upload.single('image'), async (req, res) => {
       req.params.id,
       updateData,
       { new: true, runValidators: true }
-    ).populate('category');
+    );
     
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
     
-    res.json(product);
+    const populatedProduct = await Product.populate(product, 'category');
+    res.json(populatedProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

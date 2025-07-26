@@ -1,6 +1,8 @@
 # Twinkle Jewellery - MERN Stack Application
 
-A complete jewellery catalog application built with the MERN stack (MongoDB, Express.js, React, Node.js). This application allows users to browse products and provides admin functionality for managing products and categories.
+A complete jewellery catalog application built with the MERN stack (Modern Express React Node - using JSON file storage instead of MongoDB). This application allows users to browse products and provides admin functionality for managing products and categories.
+
+**Custom Domain**: [www.twinklesjewellery.in](https://www.twinklesjewellery.in)
 
 ## Features
 
@@ -18,19 +20,22 @@ A complete jewellery catalog application built with the MERN stack (MongoDB, Exp
 
 ## Technology Stack
 
-- **Backend**: Node.js, Express.js, MongoDB with Mongoose
+- **Backend**: Node.js, Express.js, JSON file-based data storage
 - **Frontend**: React with TypeScript, React Router
 - **File Upload**: Multer for image handling
 - **Styling**: Plain CSS with responsive design
+- **Domain**: Custom domain at www.twinklesjewellery.in
 
 ## Project Structure
 
 ```
 twinkle-jewellery/
 ├── server/                 # Backend application
-│   ├── models/            # MongoDB models
+│   ├── models/            # Data models (JSON-based)
 │   ├── routes/            # API routes
 │   ├── middleware/        # Custom middleware
+│   ├── utils/             # Utility functions (JSON storage)
+│   ├── data/              # JSON data files storage
 │   ├── uploads/           # Uploaded images storage
 │   ├── server.js          # Main server file
 │   ├── package.json       # Backend dependencies
@@ -43,6 +48,7 @@ twinkle-jewellery/
 │   │   └── App.tsx        # Main App component
 │   ├── package.json       # Frontend dependencies
 │   └── .env.example       # Frontend environment template
+├── CNAME                  # Custom domain configuration
 └── README.md              # This file
 ```
 
@@ -51,8 +57,9 @@ twinkle-jewellery/
 Before running this application, make sure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/) (running locally or connection string to MongoDB Atlas)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+**Note**: This application uses JSON file-based storage, so no database installation is required.
 
 ## Installation & Setup
 
@@ -77,7 +84,6 @@ cp .env.example .env
 
 # Edit .env file with your configuration
 # PORT=5000
-# MONGODB_URI=mongodb://localhost:27017/twinkle-jewellery
 # ADMIN_KEY=admin123
 # NODE_ENV=development
 
@@ -88,7 +94,7 @@ mkdir uploads
 npm run dev
 ```
 
-The backend server will start on `http://localhost:5000`
+The backend server will start on `http://localhost:5000`. Data will be automatically stored in JSON files in the `server/data/` directory.
 
 ### 3. Frontend Setup
 
@@ -112,16 +118,15 @@ npm start
 
 The frontend will start on `http://localhost:3000`
 
-### 4. MongoDB Setup
+### 4. Data Storage
 
-Make sure MongoDB is running on your system:
+The application uses JSON file-based storage instead of a traditional database. Data files are automatically created in the `server/data/` directory:
 
-```bash
-# For local MongoDB installation
-mongod
-```
+- `categories.json` - Product categories
+- `products.json` - Product catalog
+- `messages.json` - Contact messages
 
-Or update the `MONGODB_URI` in your `.env` file to point to your MongoDB Atlas connection string.
+Default categories are automatically created on first startup.
 
 ## Usage
 
@@ -174,9 +179,11 @@ Or as a query parameter:
 
 The application creates default categories on first run:
 - Rings
-- Necklaces
+- Necklaces  
 - Earrings
 - Bracelets
+
+Data is persisted in JSON files and will survive server restarts.
 
 ## File Upload
 
@@ -219,7 +226,6 @@ npm run build
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/twinkle-jewellery
 ADMIN_KEY=admin123
 NODE_ENV=development
 ```
@@ -230,6 +236,12 @@ NODE_ENV=development
 REACT_APP_API_URL=http://localhost:5000/api
 REACT_APP_ADMIN_KEY=admin123
 ```
+
+## Access the Application
+
+- **Production Site**: [www.twinklesjewellery.in](https://www.twinklesjewellery.in)
+- **Local Development**: `http://localhost:3000`
+- **API Endpoint**: `http://localhost:5000/api`
 
 ## Contributing
 
