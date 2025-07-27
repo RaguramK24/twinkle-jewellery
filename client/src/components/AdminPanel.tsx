@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Product, Category, ProductFormData } from '../types';
 import { productService, categoryService } from '../services/api';
+import { formatPrice, getImageUrl } from '../utils/formatters';
 
 const AdminPanel: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -117,11 +118,6 @@ const AdminPanel: React.FC = () => {
     });
     setEditingProduct(null);
     setShowProductForm(false);
-  };
-
-  const getImageUrl = (imageName?: string): string => {
-    if (!imageName) return '';
-    return `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/uploads/${imageName}`;
   };
 
   if (loading) {
@@ -295,7 +291,7 @@ const AdminPanel: React.FC = () => {
                     )}
                   </td>
                   <td>{product.name}</td>
-                  <td>${product.price.toFixed(2)}</td>
+                  <td>{formatPrice(product.price)}</td>
                   <td>{product.category.name}</td>
                   <td>
                     <div className="table-actions">
