@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productService } from '../services/api';
+import { formatPrice, getImageUrl } from '../utils/formatters';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,11 +28,6 @@ const ProductDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getImageUrl = (imageName?: string): string => {
-    if (!imageName) return '';
-    return `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/uploads/${imageName}`;
   };
 
   if (loading) {
@@ -70,7 +66,7 @@ const ProductDetail: React.FC = () => {
         
         <div className="product-detail-info">
           <h1 className="product-detail-name">{product.name}</h1>
-          <p className="product-detail-price">${product.price.toFixed(2)}</p>
+          <p className="product-detail-price">{formatPrice(product.price)}</p>
           <p className="product-detail-category">
             Category: {product.category.name}
           </p>
