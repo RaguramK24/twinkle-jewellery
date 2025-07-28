@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "_id": "1753687123958x560vwd6z",
+    "name": "Rings",
+    "description": "Beautiful rings for all occasions",
+    "createdAt": "2025-07-28T07:18:43.958Z",
+    "updatedAt": "2025-07-28T07:18:43.958Z"
+  },
+  {
+    "_id": "1753687123959axcu9rzk2",
+    "name": "Necklaces",
+    "description": "Elegant necklaces and chains",
+    "createdAt": "2025-07-28T07:18:43.959Z",
+    "updatedAt": "2025-07-28T07:18:43.959Z"
+  },
+  {
+    "_id": "17536871239596wg7onqhj",
+    "name": "Earrings",
+    "description": "Stunning earrings collection",
+    "createdAt": "2025-07-28T07:18:43.959Z",
+    "updatedAt": "2025-07-28T07:18:43.959Z"
+  },
+  {
+    "_id": "1753687123959ff2bd73a9",
+    "name": "Bracelets",
+    "description": "Stylish bracelets and bangles",
+    "createdAt": "2025-07-28T07:18:43.959Z",
+    "updatedAt": "2025-07-28T07:18:43.959Z"
+  }
+]
