@@ -20,7 +20,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.error('Authentication failed - admin login required');
+      console.error('Authentication failed - admin login required:', error.response?.data?.message);
+      // Could potentially redirect to login page here if needed
+    } else if (error.response?.status === 403) {
+      console.error('Access forbidden - admin privileges required:', error.response?.data?.message);
     }
     return Promise.reject(error);
   }
