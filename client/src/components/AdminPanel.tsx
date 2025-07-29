@@ -13,6 +13,8 @@ const AdminPanel: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Form states
   const [productForm, setProductForm] = useState<ProductFormData>({
@@ -120,6 +122,15 @@ const AdminPanel: React.FC = () => {
     setEditingProduct(null);
     setShowProductForm(false);
   };
+
+  // Filter products based on category and search term
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = !selectedCategory || product.category._id === selectedCategory;
+    const matchesSearch = !searchTerm || 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   if (loading) {
     return <div className="loading">Loading admin panel...</div>;
@@ -266,8 +277,41 @@ const AdminPanel: React.FC = () => {
       {/* Products List */}
       <div className="product-management">
         <h2>Existing Products</h2>
-        {products.length === 0 ? (
-          <p>No products found.</p>
+        
+        {/* Filter and Search Controls */}
+        <div className="product-filters">
+          <div className="filter-group">
+            <label htmlFor="admin-category-filter">Filter by Category:</label>
+            <select
+              id="admin-category-filter"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Categories</option>
+              {categories.map(category => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label htmlFor="admin-product-search">Search Products:</label>
+            <input
+              id="admin-product-search"
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by name or description..."
+              className="search-input"
+            />
+          </div>
+        </div>
+        
+        {filteredProducts.length === 0 ? (
+          <p>{products.length === 0 ? "No products found." : "No products match your search criteria."}</p>
         ) : (
           <table className="products-table">
             <thead>
@@ -280,7 +324,7 @@ const AdminPanel: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {filteredProducts.map(product => (
                 <tr key={product._id}>
                   <td>
                     <div style={{ width: '80px', height: '60px' }}>

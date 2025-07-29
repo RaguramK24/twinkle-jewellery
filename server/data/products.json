@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "_id": "prod1",
+    "name": "Diamond Solitaire Ring",
+    "price": 25000,
+    "description": "Beautiful diamond solitaire ring with 18k gold band. Perfect for engagements and special occasions.",
+    "category": "cat1",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod2",
+    "name": "Gold Chain Necklace",
+    "price": 15000,
+    "description": "Elegant 22k gold chain necklace for daily wear. Classic design that never goes out of style.",
+    "category": "cat2",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod3",
+    "name": "Pearl Drop Earrings",
+    "price": 8000,
+    "description": "Classic pearl drop earrings with sterling silver. Timeless elegance for any occasion.",
+    "category": "cat3",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod4",
+    "name": "Rose Gold Bracelet",
+    "price": 12000,
+    "description": "Delicate rose gold bracelet with heart charm. A perfect gift for someone special.",
+    "category": "cat4",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod5",
+    "name": "Vintage Engagement Ring",
+    "price": 35000,
+    "description": "Stunning vintage-style engagement ring with intricate details and sparkling diamonds.",
+    "category": "cat1",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod6",
+    "name": "Silver Pendant Necklace",
+    "price": 5000,
+    "description": "Beautiful silver pendant necklace with modern design. Perfect for everyday wear.",
+    "category": "cat2",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod7",
+    "name": "Gold Hoop Earrings",
+    "price": 6000,
+    "description": "Classic gold hoop earrings that complement any outfit. A wardrobe essential.",
+    "category": "cat3",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "prod8",
+    "name": "Diamond Tennis Bracelet",
+    "price": 45000,
+    "description": "Luxurious diamond tennis bracelet with brilliant cut diamonds. Ultimate elegance and sparkle.",
+    "category": "cat4",
+    "images": [],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]

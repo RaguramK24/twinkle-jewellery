@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "_id": "cat1",
+    "name": "Rings",
+    "description": "Beautiful rings for all occasions",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "cat2",
+    "name": "Necklaces",
+    "description": "Elegant necklaces and chains",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "cat3",
+    "name": "Earrings",
+    "description": "Stunning earrings collection",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "cat4",
+    "name": "Bracelets",
+    "description": "Charming bracelets and bangles",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
