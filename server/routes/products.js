@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const Product = require('../models/Product');
 const { adminAuth } = require('../middleware/auth');
+const { optimizeImageMiddleware } = require('../utils/imageOptimizer');
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -55,7 +56,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/products - Create product (admin only)
-router.post('/', adminAuth, upload.single('image'), async (req, res) => {
+router.post('/', adminAuth, upload.single('image'), optimizeImageMiddleware, async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
     
@@ -80,7 +81,7 @@ router.post('/', adminAuth, upload.single('image'), async (req, res) => {
 });
 
 // PUT /api/products/:id - Update product (admin only)
-router.put('/:id', adminAuth, upload.single('image'), async (req, res) => {
+router.put('/:id', adminAuth, upload.single('image'), optimizeImageMiddleware, async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
     
