@@ -122,6 +122,31 @@ The server is configured to accept credentials from:
    - Clear your browser cookies and log in again
    - Check that the server is running and accessible
 
+5. **Session lost on page refresh (Fixed)**
+   - This issue has been resolved with improved cookie settings
+   - Development uses `SameSite=Lax` for better local compatibility
+   - Production uses `SameSite=None; Secure` for cross-site support
+   - If you still experience issues, ensure:
+     - CORS is properly configured with `credentials: true`
+     - Frontend includes `credentials: 'include'` in fetch requests
+     - Browser is not blocking third-party cookies (in production)
+
+### Cookie and CORS Configuration
+
+**For Developers:**
+- The application uses httpOnly cookies for secure token storage
+- Cookie settings automatically adjust based on NODE_ENV:
+  - **Development**: `SameSite=Lax` (more permissive for localhost)
+  - **Production**: `SameSite=None; Secure` (required for cross-site requests)
+- All API requests must include `credentials: 'include'` to send cookies
+- CORS is configured to accept credentials from whitelisted origins
+
+**If experiencing cookie issues:**
+1. Check browser developer tools > Application > Cookies
+2. Verify the `adminToken` cookie is set with correct flags
+3. Ensure the frontend and backend origins are in the CORS whitelist
+4. Test in an incognito window to rule out browser extensions
+
 ## Migration from Previous System
 
 The previous admin toggle system has been completely removed:
