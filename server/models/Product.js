@@ -22,7 +22,9 @@ class Product {
       price: parseFloat(productData.price),
       description: productData.description.trim(),
       category: productData.category,
-      image: productData.image || null
+      image: productData.image || null,
+      imageKitFileId: productData.imageKitFileId || null,
+      imageMetadata: productData.imageMetadata || {}
     });
 
     return await product.save();
@@ -57,6 +59,15 @@ class Product {
     
     if (updateData.image !== undefined) {
       cleanUpdateData.image = updateData.image;
+    }
+
+    // Handle ImageKit specific fields
+    if (updateData.imageKitFileId !== undefined) {
+      cleanUpdateData.imageKitFileId = updateData.imageKitFileId;
+    }
+
+    if (updateData.imageMetadata !== undefined) {
+      cleanUpdateData.imageMetadata = updateData.imageMetadata;
     }
 
     return await ProductSchema.findByIdAndUpdate(id, cleanUpdateData, { new: true, ...options });

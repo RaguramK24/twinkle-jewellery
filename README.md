@@ -25,8 +25,9 @@ A complete jewellery catalog application built with the MERN stack (MongoDB, Exp
 - **Backend**: Node.js, Express.js, JWT authentication, MongoDB Atlas, Mongoose ODM
 - **Frontend**: React with TypeScript, React Router, Authentication Context
 - **Database**: MongoDB Atlas (cloud database)
+- **Image Storage**: ImageKit.io for cloud-based image storage and optimization
 - **Security**: JWT tokens, bcrypt password hashing, protected routes
-- **File Upload**: Multer for image handling with Sharp for optimization
+- **File Upload**: Multer for image handling with Sharp for optimization, ImageKit.io for storage
 - **Styling**: Plain CSS with responsive design
 - **Domain**: Custom domain at www.twinklesjewellery.in
 
@@ -38,8 +39,9 @@ twinkle-jewellery/
 │   ├── models/            # Mongoose models and schemas
 │   ├── routes/            # API routes
 │   ├── middleware/        # Custom middleware
-│   ├── utils/             # Utility functions (database, image optimization)
-│   ├── uploads/           # Uploaded images storage
+│   ├── utils/             # Utility functions (database, image optimization, ImageKit)
+│   ├── uploads/           # Local uploads (backward compatibility)
+│   ├── tmp/               # Temporary files during image processing
 │   ├── server.js          # Main server file
 │   ├── package.json       # Backend dependencies
 │   └── .env.example       # Environment variables template
@@ -57,11 +59,12 @@ twinkle-jewellery/
 
 ## Prerequisites
 
-Before running this application, make sure you have the following installed:
+Before running this application, make sure you have the following:
 
 - [Node.js](https://nodejs.org/) (v14 or higher)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 - MongoDB Atlas account (free tier available)
+- [ImageKit.io](https://imagekit.io/) account for image storage (free tier available)
 
 ## Installation & Setup
 
@@ -90,8 +93,11 @@ cp .env.example .env
 # NODE_ENV=development
 # JWT_SECRET=your_jwt_secret_key_here
 # MONGODB_URI=your_mongodb_atlas_connection_string
+# IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key_here
+# IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key_here
+# IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint_here
 
-# Create uploads directory for images
+# Create uploads directory for backward compatibility (optional)
 mkdir uploads
 
 # Start the backend server
@@ -129,20 +135,60 @@ npm start
 
 The frontend will start on `http://localhost:3000`
 
-### 5. Data Storage & Image Optimization
+### 5. Image Storage with ImageKit.io
 
-The application uses MongoDB Atlas for data storage with the following collections:
+The application now uses ImageKit.io for cloud-based image storage and optimization. This provides:
 
-- `categories` - Product categories
-- `products` - Product catalog with category references
-- `messages` - Contact messages
+- **Cloud Storage**: Images are stored on ImageKit.io's global CDN
+- **Real-time Optimization**: Automatic image resizing, format conversion, and quality optimization
+- **Fast Delivery**: Global CDN ensures fast image loading worldwide
+- **Transformation API**: Generate different image sizes and formats on-demand
 
-Images are stored locally in the `uploads/` directory and are automatically optimized using Sharp:
-- Resized to maximum 1200px width/height
-- Converted to JPEG format with 85% quality
-- Progressive JPEG encoding for faster loading
+#### ImageKit.io Setup
 
-Only image paths/URLs are stored in the database, not the actual image files.
+1. **Create ImageKit Account**
+   - Sign up at [ImageKit.io](https://imagekit.io/)
+   - Create a new project or use an existing one
+
+2. **Get API Credentials**
+   - Go to Developer Options in your ImageKit dashboard
+   - Copy your:
+     - Public Key
+     - Private Key
+     - URL Endpoint
+
+3. **Configure Environment Variables**
+   ```bash
+   IMAGEKIT_PUBLIC_KEY=public_xxxxxxxxxxxxxxxxxxxxx
+   IMAGEKIT_PRIVATE_KEY=private_xxxxxxxxxxxxxxxxxxxx
+   IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_imagekit_id
+   ```
+
+#### Image Processing Pipeline
+
+1. **Upload Process**:
+   - Admin uploads image through the admin panel
+   - Image is temporarily stored locally
+   - Sharp library optimizes the image (resize to 1200px max, JPEG 85% quality)
+   - Optimized image is uploaded to ImageKit.io
+   - Local temporary file is deleted
+   - ImageKit URL is stored in the database
+
+2. **Serving Images**:
+   - Frontend receives ImageKit URLs from the API
+   - Images are served directly from ImageKit.io's CDN
+   - Real-time transformations available via URL parameters
+
+3. **Cleanup**:
+   - When products are deleted, associated images are removed from ImageKit.io
+   - Old images are automatically deleted when products are updated with new images
+
+#### Migration from Local Storage
+
+The application maintains backward compatibility with existing local images:
+- Existing products with local images continue to work
+- New uploads automatically use ImageKit.io
+- The `imageUrl` virtual field handles both local and ImageKit URLs seamlessly
 
 ### 6. Database Migration & Seeding
 
@@ -230,12 +276,22 @@ Data is persisted in JSON files and will survive server restarts.
 
 ## File Upload
 
-Product images are stored locally in the `server/uploads/` directory. Supported formats:
-- JPEG, JPG
-- PNG
-- GIF
-- WebP
-- Maximum file size: 5MB
+Product images are now stored on ImageKit.io cloud storage with the following features:
+
+- **Supported formats**: JPEG, JPG, PNG, GIF, WebP
+- **Maximum file size**: 5MB
+- **Automatic optimization**: Images are resized to max 1200px and converted to JPEG with 85% quality
+- **Cloud delivery**: Images served via ImageKit.io's global CDN
+- **Real-time transformations**: Generate thumbnails and different sizes on-demand
+- **Backward compatibility**: Existing local images continue to work
+
+### Image Upload Process:
+1. File uploaded via admin panel
+2. Temporary local storage for processing
+3. Sharp optimization (resize, format conversion)
+4. Upload to ImageKit.io
+5. Local file cleanup
+6. ImageKit URL stored in database
 
 ## Development
 
@@ -269,8 +325,15 @@ npm run build
 
 ```env
 PORT=5000
-ADMIN_KEY=admin123
 NODE_ENV=development
+JWT_SECRET=your_jwt_secret_key_here
+ADMIN_KEY=admin123
+MONGODB_URI=your_mongodb_atlas_connection_string
+
+# ImageKit.io Configuration
+IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key_here
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key_here
+IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint_here
 ```
 
 ### Frontend (.env)
@@ -350,6 +413,11 @@ If you prefer to configure manually instead of using the `render.yaml` file:
    NODE_ENV=production
    PORT=10000
    ADMIN_KEY=your-secure-admin-key
+   JWT_SECRET=your-secure-jwt-secret
+   MONGODB_URI=your-mongodb-connection-string
+   IMAGEKIT_PUBLIC_KEY=your-imagekit-public-key
+   IMAGEKIT_PRIVATE_KEY=your-imagekit-private-key
+   IMAGEKIT_URL_ENDPOINT=your-imagekit-url-endpoint
    ```
 
 ### Custom Domain Setup with GoDaddy
@@ -424,9 +492,10 @@ Once your app is deployed on Render, you can connect a custom domain purchased f
    - Render offers PostgreSQL databases on paid plans
 
 3. **File Uploads**
-   - Uploaded images are stored on Render's ephemeral file system
-   - For permanent file storage, consider using cloud storage (AWS S3, Cloudinary)
-   - The current setup includes a persistent disk for file uploads
+   - Images are now stored on ImageKit.io cloud storage
+   - No need for persistent disk storage on the hosting platform
+   - Ensure ImageKit.io credentials are properly configured in environment variables
+   - ImageKit.io provides global CDN and automatic optimization
 
 4. **Monitoring**
    - Use Render's built-in logs and metrics
@@ -451,9 +520,19 @@ Once your app is deployed on Render, you can connect a custom domain purchased f
 - Allow 24-48 hours for full DNS propagation
 
 **File Upload Issues:**
-- Check that the uploads directory exists
+- Check that ImageKit.io credentials are correctly set in .env
+- Verify ImageKit.io account has sufficient storage quota
+- Check that the uploads directory exists (for temporary processing)
 - Verify file size limits (5MB default)
-- For persistent files, ensure disk storage is properly configured
+- Ensure ImageKit.io endpoint URL is correct and accessible
+
+**ImageKit Configuration Issues:**
+- Verify all three ImageKit environment variables are set:
+  - IMAGEKIT_PUBLIC_KEY
+  - IMAGEKIT_PRIVATE_KEY
+  - IMAGEKIT_URL_ENDPOINT
+- Check ImageKit.io dashboard for API key validity
+- Ensure your ImageKit.io plan supports the required features
 
 For more detailed information, visit the [Render Documentation](https://render.com/docs).
 
