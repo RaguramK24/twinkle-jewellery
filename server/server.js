@@ -36,16 +36,23 @@ const corsOptions = {
 };
 
 // Ensure uploads directory exists
-const ensureUploadsDirectory = () => {
+const ensureDirectories = () => {
   const uploadsDir = path.join(__dirname, 'uploads');
+  const tmpDir = path.join(__dirname, 'tmp');
+  
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
     console.log('Created uploads directory:', uploadsDir);
   }
+  
+  if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir, { recursive: true });
+    console.log('Created tmp directory:', tmpDir);
+  }
 };
 
-// Create uploads directory if it doesn't exist
-ensureUploadsDirectory();
+// Create required directories
+ensureDirectories();
 
 // Middleware
 app.use(cors(corsOptions));

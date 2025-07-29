@@ -24,9 +24,46 @@ const productSchema = new mongoose.Schema({
   image: {
     type: String,
     default: null
+  },
+  // ImageKit specific fields
+  imageKitFileId: {
+    type: String,
+    default: null
+  },
+  imageMetadata: {
+    url: {
+      type: String,
+      default: null
+    },
+    thumbnailUrl: {
+      type: String,
+      default: null
+    },
+    width: {
+      type: Number,
+      default: null
+    },
+    height: {
+      type: Number,
+      default: null
+    },
+    size: {
+      type: Number,
+      default: null
+    }
   }
 }, {
   timestamps: true
 });
+
+// Virtual field for backward compatibility - returns the main image URL
+productSchema.virtual('imageUrl').get(function() {
+  // Prioritize ImageKit URL, fallback to legacy image field for local files
+  return this.imageMetadata?.url || (this.image ? `/uploads/${this.image}` : null);
+});
+
+// Ensure virtual fields are included in JSON output
+productSchema.set('toJSON', { virtuals: true });
+productSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('Product', productSchema);

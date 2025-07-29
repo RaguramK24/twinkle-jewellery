@@ -26,6 +26,10 @@ lerna-debug.log*
 server/uploads/*
 !server/uploads/.gitkeep
 
+# Temporary files
+server/tmp/*
+!server/tmp/.gitkeep
+
 # Operating System
 .DS_Store
 .DS_Store?
