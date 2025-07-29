@@ -51,8 +51,12 @@ export const productService = {
     formData.append('description', productData.description);
     formData.append('category', productData.category);
     
-    if (productData.image) {
-      formData.append('image', productData.image);
+    // Handle multiple images
+    if (productData.images) {
+      const imageFiles = Array.from(productData.images);
+      imageFiles.forEach((file) => {
+        formData.append('images', file);
+      });
     }
 
     const response = await api.post('/products', formData, {
@@ -71,8 +75,12 @@ export const productService = {
     formData.append('description', productData.description);
     formData.append('category', productData.category);
     
-    if (productData.image) {
-      formData.append('image', productData.image);
+    // Handle multiple images
+    if (productData.images) {
+      const imageFiles = Array.from(productData.images);
+      imageFiles.forEach((file) => {
+        formData.append('images', file);
+      });
     }
 
     const response = await api.put(`/products/${id}`, formData, {

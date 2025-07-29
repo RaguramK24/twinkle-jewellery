@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productService } from '../services/api';
-import { formatPrice, getImageUrl } from '../utils/formatters';
+import { formatPrice, getProductImageUrls } from '../utils/formatters';
+import ImageCarousel from './ImageCarousel';
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -52,37 +53,35 @@ const ProductList: React.FC = () => {
         </div>
       ) : (
         <div className="products-grid">
-          {products.map((product) => (
-            <Link
-              key={product._id}
-              to={`/product/${product._id}`}
-              className="product-card"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              {product.image ? (
-                <img
-                  src={getImageUrl(product.image)}
+          {products.map((product) => {
+            const imageUrls = getProductImageUrls(product);
+            return (
+              <Link
+                key={product._id}
+                to={`/product/${product._id}`}
+                className="product-card"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ImageCarousel
+                  images={imageUrls}
                   alt={product.name}
                   className="product-image"
+                  showDots={imageUrls.length > 1}
                 />
-              ) : (
-                <div className="product-placeholder">
-                  No Image Available
+                
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-price">{formatPrice(product.price)}</p>
+                  <p className="product-category">{product.category.name}</p>
+                  <p className="product-description">
+                    {product.description.length > 100
+                      ? `${product.description.substring(0, 100)}...`
+                      : product.description}
+                  </p>
                 </div>
-              )}
-              
-              <div className="product-info">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-price">{formatPrice(product.price)}</p>
-                <p className="product-category">{product.category.name}</p>
-                <p className="product-description">
-                  {product.description.length > 100
-                    ? `${product.description.substring(0, 100)}...`
-                    : product.description}
-                </p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

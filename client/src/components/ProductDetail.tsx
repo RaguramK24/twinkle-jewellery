@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productService } from '../services/api';
-import { formatPrice, getImageUrl } from '../utils/formatters';
+import { formatPrice, getProductImageUrls } from '../utils/formatters';
+import ImageCarousel from './ImageCarousel';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,17 +53,13 @@ const ProductDetail: React.FC = () => {
       </Link>
       
       <div className="product-detail">
-        {product.image ? (
-          <img
-            src={getImageUrl(product.image)}
-            alt={product.name}
-            className="product-detail-image"
-          />
-        ) : (
-          <div className="product-detail-placeholder">
-            No Image Available
-          </div>
-        )}
+        <ImageCarousel
+          images={getProductImageUrls(product)}
+          alt={product.name}
+          className="product-detail-image"
+          showControls={true}
+          showDots={true}
+        />
         
         <div className="product-detail-info">
           <h1 className="product-detail-name">{product.name}</h1>

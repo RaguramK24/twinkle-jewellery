@@ -22,6 +22,10 @@ class Product {
       price: parseFloat(productData.price),
       description: productData.description.trim(),
       category: productData.category,
+      images: productData.images || [],
+      imageKitFileIds: productData.imageKitFileIds || [],
+      imageMetadataList: productData.imageMetadataList || [],
+      // Keep legacy fields for backward compatibility
       image: productData.image || null,
       imageKitFileId: productData.imageKitFileId || null,
       imageMetadata: productData.imageMetadata || {}
@@ -57,6 +61,20 @@ class Product {
       cleanUpdateData.category = updateData.category;
     }
     
+    // Handle multiple images
+    if (updateData.images !== undefined) {
+      cleanUpdateData.images = updateData.images;
+    }
+    
+    if (updateData.imageKitFileIds !== undefined) {
+      cleanUpdateData.imageKitFileIds = updateData.imageKitFileIds;
+    }
+    
+    if (updateData.imageMetadataList !== undefined) {
+      cleanUpdateData.imageMetadataList = updateData.imageMetadataList;
+    }
+    
+    // Handle legacy single image for backward compatibility
     if (updateData.image !== undefined) {
       cleanUpdateData.image = updateData.image;
     }
@@ -82,22 +100,45 @@ class Product {
     if (!Array.isArray(products)) {
       if (products && field === 'category') {
         const populated = await ProductSchema.findById(products._id).populate('category');
-        return populated;
+        return this.ensureImageArrays(populated);
       }
-      return products;
+      return this.ensureImageArrays(products);
     }
     
     const populatedProducts = [];
     for (const product of products) {
       if (product && field === 'category') {
         const populated = await ProductSchema.findById(product._id).populate('category');
-        populatedProducts.push(populated);
+        populatedProducts.push(this.ensureImageArrays(populated));
       } else {
-        populatedProducts.push(product);
+        populatedProducts.push(this.ensureImageArrays(product));
       }
     }
     
     return populatedProducts;
+  }
+
+  // Helper method to ensure backward compatibility by migrating single image to array
+  ensureImageArrays(product) {
+    if (!product) return product;
+    
+    // Convert to plain object if it's a mongoose document
+    const productObj = product.toObject ? product.toObject({ virtuals: true }) : product;
+    
+    // If no images array but has legacy image, migrate it
+    if ((!productObj.images || productObj.images.length === 0) && productObj.image) {
+      productObj.images = [productObj.image];
+      
+      if (productObj.imageKitFileId) {
+        productObj.imageKitFileIds = [productObj.imageKitFileId];
+      }
+      
+      if (productObj.imageMetadata && Object.keys(productObj.imageMetadata).length > 0) {
+        productObj.imageMetadataList = [productObj.imageMetadata];
+      }
+    }
+    
+    return productObj;
   }
 }
 

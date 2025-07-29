@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Product, Category, ProductFormData } from '../types';
 import { productService, categoryService } from '../services/api';
-import { formatPrice, getImageUrl } from '../utils/formatters';
+import { formatPrice, getProductImageUrls } from '../utils/formatters';
+import ImageCarousel from './ImageCarousel';
 
 const AdminPanel: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -242,12 +243,16 @@ const AdminPanel: React.FC = () => {
               </div>
               
               <div className="form-group">
-                <label>Image:</label>
+                <label>Images (up to 5):</label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setProductForm({...productForm, image: e.target.files?.[0]})}
+                  multiple
+                  onChange={(e) => setProductForm({...productForm, images: e.target.files || undefined})}
                 />
+                <small style={{ color: '#7f8c8d', fontSize: '0.9rem' }}>
+                  Select multiple images to create a carousel. Maximum 5 images allowed.
+                </small>
               </div>
               
               <button type="submit" className="btn btn-success">
@@ -278,17 +283,14 @@ const AdminPanel: React.FC = () => {
               {products.map(product => (
                 <tr key={product._id}>
                   <td>
-                    {product.image ? (
-                      <img
-                        src={getImageUrl(product.image)}
+                    <div style={{ width: '80px', height: '60px' }}>
+                      <ImageCarousel
+                        images={getProductImageUrls(product)}
                         alt={product.name}
-                        style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                        showControls={getProductImageUrls(product).length > 1}
+                        showDots={false}
                       />
-                    ) : (
-                      <div style={{ width: '50px', height: '50px', backgroundColor: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>
-                        No Image
-                      </div>
-                    )}
+                    </div>
                   </td>
                   <td>{product.name}</td>
                   <td>{formatPrice(product.price)}</td>
