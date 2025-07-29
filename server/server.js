@@ -89,23 +89,6 @@ app.use((error, req, res, next) => {
 // Initialize JSON data storage (replaces MongoDB connection)
 const initializeData = async () => {
   try {
-    const Category = require('./models/Category');
-    
-    // Check if default categories need to be created
-    const categoriesCount = await Category.countDocuments();
-    if (categoriesCount === 0) {
-      console.log('Creating default categories...');
-      const defaultCategories = [
-        { name: 'Rings', description: 'Beautiful rings for all occasions' },
-        { name: 'Necklaces', description: 'Elegant necklaces and chains' },
-        { name: 'Earrings', description: 'Stunning earrings collection' },
-        { name: 'Bracelets', description: 'Stylish bracelets and bangles' }
-      ];
-      
-      await Category.insertMany(defaultCategories);
-      console.log('Default categories created successfully');
-    }
-    
     console.log('JSON data storage initialized');
   } catch (err) {
     console.error('Error initializing data storage:', err);
