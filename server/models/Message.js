@@ -1,38 +1,24 @@
-const JsonStorage = require('../utils/jsonStorage');
+const MessageSchema = require('./MessageSchema');
 
 class Message {
-  constructor() {
-    this.storage = new JsonStorage('messages');
-  }
-
   async save(messageData) {
-    // Validate required fields
-    if (!messageData.name || !messageData.name.trim()) {
-      throw new Error('Name is required');
-    }
-    if (!messageData.email || !messageData.email.trim()) {
-      throw new Error('Email is required');
-    }
-    if (!messageData.message || !messageData.message.trim()) {
-      throw new Error('Message is required');
-    }
-
-    return this.storage.create({
+    const message = new MessageSchema({
       name: messageData.name.trim(),
       email: messageData.email.trim(),
-      message: messageData.message.trim(),
-      timestamp: new Date()
+      phone: messageData.phone ? messageData.phone.trim() : undefined,
+      message: messageData.message.trim()
     });
+
+    return await message.save();
   }
 
   async find() {
-    return this.storage.findAll();
+    return await MessageSchema.find();
   }
 
   // Method to sort messages by timestamp descending
   async findSorted() {
-    const messages = this.storage.findAll();
-    return messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    return await MessageSchema.find().sort({ createdAt: -1 });
   }
 }
 

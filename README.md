@@ -1,6 +1,6 @@
 # Twinkle Jewellery - MERN Stack Application
 
-A complete jewellery catalog application built with the MERN stack (Modern Express React Node - using JSON file storage instead of MongoDB). This application allows users to browse products and provides admin functionality for managing products and categories.
+A complete jewellery catalog application built with the MERN stack (MongoDB, Express, React, Node.js). This application allows users to browse products and provides admin functionality for managing products and categories with MongoDB Atlas as the database.
 
 **Custom Domain**: [www.twinklesjewellery.in](https://www.twinklesjewellery.in)
 
@@ -16,16 +16,17 @@ A complete jewellery catalog application built with the MERN stack (Modern Expre
 - Secure JWT-based authentication system
 - Create, edit, and delete products
 - Manage categories
-- Upload product images
+- Upload product images with automatic optimization
 - View customer support messages
 - Protected admin routes with login/logout
 
 ## Technology Stack
 
-- **Backend**: Node.js, Express.js, JWT authentication, JSON file-based data storage
+- **Backend**: Node.js, Express.js, JWT authentication, MongoDB Atlas, Mongoose ODM
 - **Frontend**: React with TypeScript, React Router, Authentication Context
+- **Database**: MongoDB Atlas (cloud database)
 - **Security**: JWT tokens, bcrypt password hashing, protected routes
-- **File Upload**: Multer for image handling
+- **File Upload**: Multer for image handling with Sharp for optimization
 - **Styling**: Plain CSS with responsive design
 - **Domain**: Custom domain at www.twinklesjewellery.in
 
@@ -34,11 +35,10 @@ A complete jewellery catalog application built with the MERN stack (Modern Expre
 ```
 twinkle-jewellery/
 ├── server/                 # Backend application
-│   ├── models/            # Data models (JSON-based)
+│   ├── models/            # Mongoose models and schemas
 │   ├── routes/            # API routes
 │   ├── middleware/        # Custom middleware
-│   ├── utils/             # Utility functions (JSON storage)
-│   ├── data/              # JSON data files storage
+│   ├── utils/             # Utility functions (database, image optimization)
 │   ├── uploads/           # Uploaded images storage
 │   ├── server.js          # Main server file
 │   ├── package.json       # Backend dependencies
@@ -61,8 +61,7 @@ Before running this application, make sure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (v14 or higher)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-
-**Note**: This application uses JSON file-based storage, so no database installation is required.
+- MongoDB Atlas account (free tier available)
 
 ## Installation & Setup
 
@@ -89,6 +88,8 @@ cp .env.example .env
 # PORT=5000
 # ADMIN_KEY=admin123
 # NODE_ENV=development
+# JWT_SECRET=your_jwt_secret_key_here
+# MONGODB_URI=your_mongodb_atlas_connection_string
 
 # Create uploads directory for images
 mkdir uploads
@@ -97,9 +98,17 @@ mkdir uploads
 npm run dev
 ```
 
-The backend server will start on `http://localhost:5000`. Data will be automatically stored in JSON files in the `server/data/` directory.
+The backend server will start on `http://localhost:5000`. Data will be stored in MongoDB Atlas.
 
-### 3. Frontend Setup
+### 3. MongoDB Atlas Setup
+
+1. Create a free MongoDB Atlas account at [https://www.mongodb.com/atlas](https://www.mongodb.com/atlas)
+2. Create a new cluster (free tier is sufficient)
+3. Create a database user with read/write permissions
+4. Add your IP address to the network access list (or allow all IPs with 0.0.0.0/0 for development)
+5. Get your connection string and add it to the `.env` file as `MONGODB_URI`
+
+### 4. Frontend Setup
 
 ```bash
 # Navigate to client directory (from project root)
@@ -120,15 +129,40 @@ npm start
 
 The frontend will start on `http://localhost:3000`
 
-### 4. Data Storage
+### 5. Data Storage & Image Optimization
 
-The application uses JSON file-based storage instead of a traditional database. Data files are automatically created in the `server/data/` directory:
+The application uses MongoDB Atlas for data storage with the following collections:
 
-- `categories.json` - Product categories
-- `products.json` - Product catalog
-- `messages.json` - Contact messages
+- `categories` - Product categories
+- `products` - Product catalog with category references
+- `messages` - Contact messages
 
-Default categories are automatically created on first startup.
+Images are stored locally in the `uploads/` directory and are automatically optimized using Sharp:
+- Resized to maximum 1200px width/height
+- Converted to JPEG format with 85% quality
+- Progressive JPEG encoding for faster loading
+
+Only image paths/URLs are stored in the database, not the actual image files.
+
+### 6. Database Migration & Seeding
+
+If you're upgrading from the JSON-based version or need to populate your database:
+
+#### Migrate from JSON files to MongoDB:
+```bash
+cd server
+npm run migrate
+```
+
+#### Seed the database with sample data:
+```bash
+cd server
+npm run seed
+```
+
+These utilities will help you:
+- **Migrate**: Transfer existing data from `server/data/*.json` files to MongoDB
+- **Seed**: Create sample categories and products for testing
 
 ## Usage
 
