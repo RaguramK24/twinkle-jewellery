@@ -8,6 +8,27 @@ const api = axios.create({
   withCredentials: true, // Include cookies in requests
 });
 
+// Ensure credentials are always included for admin-protected endpoints
+api.interceptors.request.use((config) => {
+  // Explicitly ensure credentials are sent for admin-protected operations
+  config.withCredentials = true;
+  return config;
+});
+
+// Add response interceptor for better error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.error('Authentication failed - admin login required:', error.response?.data?.message);
+      // Could potentially redirect to login page here if needed
+    } else if (error.response?.status === 403) {
+      console.error('Access forbidden - admin privileges required:', error.response?.data?.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Product services
 export const productService = {
   // Get all products
