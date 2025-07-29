@@ -22,7 +22,7 @@ const migrateJSONToMongoDB = async () => {
     await MessageSchema.deleteMany({});
     
     // Migration paths
-    const dataDir = path.join(__dirname, 'data');
+    const dataDir = path.join(__dirname, '../data');
     const categoriesPath = path.join(dataDir, 'categories.json');
     const productsPath = path.join(dataDir, 'products.json');
     const messagesPath = path.join(dataDir, 'messages.json');
