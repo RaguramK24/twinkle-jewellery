@@ -34,13 +34,19 @@ router.post('/login', async (req, res) => {
       { expiresIn: '24h' }
     );
     
-    // Set httpOnly cookie
-    res.cookie('adminToken', token, {
+    // Set httpOnly cookie with proper settings for session persistence
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    });
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      path: '/'
+    };
+    
+    // In production, don't set domain to allow cookie to work across different domains
+    // The browser will set the cookie for the current domain
+    
+    res.cookie('adminToken', token, cookieOptions);
     
     res.json({
       message: 'Login successful',
@@ -57,7 +63,16 @@ router.post('/login', async (req, res) => {
 
 // POST /api/auth/logout - Admin logout
 router.post('/logout', (req, res) => {
-  res.clearCookie('adminToken');
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
+  };
+  
+  // In production, don't set domain to allow cookie clearing to work across different domains
+  
+  res.clearCookie('adminToken', cookieOptions);
   res.json({ message: 'Logout successful' });
 });
 
