@@ -11,7 +11,10 @@ export interface Product {
   name: string;
   price: number;
   description: string;
-  image?: string;
+  // Support both legacy single image and new multiple images
+  image?: string; // Legacy field for backward compatibility
+  images?: string[]; // New field for multiple images
+  imageUrls?: string[]; // Virtual field computed by backend
   category: Category;
   createdAt: string;
   updatedAt: string;
@@ -22,7 +25,7 @@ export interface ProductFormData {
   price: number;
   description: string;
   category: string;
-  image?: File;
+  images?: FileList | File[]; // Support multiple files
 }
 
 export interface Message {
