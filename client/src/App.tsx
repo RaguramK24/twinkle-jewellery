@@ -17,7 +17,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Navigation />
-          <main className="main-content">
+          <main className="main-content" id="main-content">
             <Routes>
               <Route path="/" element={<ProductList />} />
               <Route path="/product/:id" element={<ProductDetail />} />
