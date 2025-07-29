@@ -60,7 +60,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Serve uploaded images statically
+// Serve uploaded images statically (for backward compatibility with existing local images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
