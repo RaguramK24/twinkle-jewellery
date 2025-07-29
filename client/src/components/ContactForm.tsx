@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { messageService } from '../services/api';
-import './ContactForm.css';
 
 interface FormData {
   name: string;
@@ -37,7 +36,7 @@ const ContactForm: React.FC = () => {
 
     try {
       await messageService.create(formData);
-      setStatus('Message sent successfully!');
+      setStatus('Message sent successfully! We\'ll get back to you soon.');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
       setStatus('Error sending message. Please try again.');
@@ -48,11 +47,13 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="contact-form-container">
-      <h2>Contact Admin / Support Chat</h2>
-      <form onSubmit={handleSubmit} className="contact-form">
+    <div className="contact-form">
+      <h1>Get in Touch</h1>
+      <p>Have questions about our jewelry collection? We'd love to hear from you!</p>
+      
+      <form onSubmit={handleSubmit} aria-label="Contact form">
         <div className="form-group">
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="name">Full Name *</label>
           <input
             type="text"
             id="name"
@@ -61,11 +62,16 @@ const ContactForm: React.FC = () => {
             onChange={handleChange}
             required
             disabled={isSubmitting}
+            aria-describedby="name-help"
+            placeholder="Enter your full name"
           />
+          <small id="name-help" className="form-help">
+            We'll use this to personalize our response
+          </small>
         </div>
         
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">Email Address *</label>
           <input
             type="email"
             id="email"
@@ -74,32 +80,62 @@ const ContactForm: React.FC = () => {
             onChange={handleChange}
             required
             disabled={isSubmitting}
+            aria-describedby="email-help"
+            placeholder="your.email@example.com"
           />
+          <small id="email-help" className="form-help">
+            We'll send our response to this email address
+          </small>
         </div>
         
         <div className="form-group">
-          <label htmlFor="message">Message:</label>
+          <label htmlFor="message">Your Message *</label>
           <textarea
             id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
-            rows={5}
+            rows={6}
             required
             disabled={isSubmitting}
+            aria-describedby="message-help"
+            placeholder="Tell us about your jewelry needs, questions, or how we can help you..."
           />
+          <small id="message-help" className="form-help">
+            Share details about products you're interested in, sizing questions, or any other inquiries
+          </small>
         </div>
         
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Sending...' : 'Send Message'}
+        <button 
+          type="submit" 
+          disabled={isSubmitting}
+          className={`btn btn-primary ${isSubmitting ? 'loading' : ''}`}
+          aria-describedby="submit-status"
+        >
+          {isSubmitting ? 'Sending Message...' : 'Send Message'}
         </button>
         
         {status && (
-          <div className={`status-message ${status.includes('Error') ? 'error' : 'success'}`}>
+          <div 
+            id="submit-status"
+            className={status.includes('Error') || status.includes('Please fill') ? 'error' : 'success'}
+            role="alert"
+            aria-live="polite"
+          >
             {status}
           </div>
         )}
       </form>
+      
+      <div className="contact-info">
+        <h3>Other Ways to Reach Us</h3>
+        <p>
+          <strong>Response Time:</strong> We typically respond within 24 hours during business days
+        </p>
+        <p>
+          <strong>For Urgent Inquiries:</strong> Please mention "URGENT" in your message subject
+        </p>
+      </div>
     </div>
   );
 };
