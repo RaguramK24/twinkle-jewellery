@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const connectDB = require('./utils/database');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
@@ -62,8 +63,26 @@ app.use('/api/categories', require('./routes/categories'));
 app.use('/api/messages', require('./routes/messages'));
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ message: 'Twinkle Jewellery API is running!' });
+app.get('/api/health', async (req, res) => {
+  const health = {
+    message: 'Twinkle Jewellery API is running!',
+    timestamp: new Date().toISOString(),
+    database: 'disconnected'
+  };
+  
+  try {
+    if (mongoose.connection.readyState === 1) {
+      health.database = 'connected';
+      health.dbHost = mongoose.connection.host;
+    } else if (mongoose.connection.readyState === 2) {
+      health.database = 'connecting';
+    }
+  } catch (error) {
+    health.database = 'error';
+    health.dbError = error.message;
+  }
+  
+  res.json(health);
 });
 
 // Serve static files from React build in production

@@ -144,6 +144,26 @@ Images are stored locally in the `uploads/` directory and are automatically opti
 
 Only image paths/URLs are stored in the database, not the actual image files.
 
+### 6. Database Migration & Seeding
+
+If you're upgrading from the JSON-based version or need to populate your database:
+
+#### Migrate from JSON files to MongoDB:
+```bash
+cd server
+npm run migrate
+```
+
+#### Seed the database with sample data:
+```bash
+cd server
+npm run seed
+```
+
+These utilities will help you:
+- **Migrate**: Transfer existing data from `server/data/*.json` files to MongoDB
+- **Seed**: Create sample categories and products for testing
+
 ## Usage
 
 ### For Regular Users
