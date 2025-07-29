@@ -1,79 +1,42 @@
-const JsonStorage = require('../utils/jsonStorage');
+const CategorySchema = require('./CategorySchema');
 
 class Category {
-  constructor() {
-    this.storage = new JsonStorage('categories');
-  }
-
   async find() {
-    return this.storage.findAll();
+    return await CategorySchema.find();
   }
 
   async findById(id) {
-    return this.storage.findById(id);
+    return await CategorySchema.findById(id);
   }
 
   async save(categoryData) {
-    // Validate required fields
-    if (!categoryData.name || !categoryData.name.trim()) {
-      throw new Error('Category name is required');
-    }
-
-    // Check for unique name
-    const existing = this.storage.findOneByField('name', categoryData.name.trim());
-    if (existing) {
-      const error = new Error('Category name must be unique');
-      error.code = 11000;
-      throw error;
-    }
-
-    return this.storage.create({
+    const category = new CategorySchema({
       name: categoryData.name.trim(),
       description: categoryData.description ? categoryData.description.trim() : ''
     });
+
+    return await category.save();
   }
 
   async findByIdAndUpdate(id, updateData, options = {}) {
-    const existing = this.storage.findById(id);
-    if (!existing) return null;
-
-    // Check for unique name if name is being updated
-    if (updateData.name && updateData.name !== existing.name) {
-      const nameExists = this.storage.findOneByField('name', updateData.name.trim());
-      if (nameExists && nameExists._id !== id) {
-        const error = new Error('Category name must be unique');
-        error.code = 11000;
-        throw error;
-      }
-    }
-
     const cleanUpdateData = {
       ...(updateData.name && { name: updateData.name.trim() }),
       ...(updateData.description !== undefined && { description: updateData.description.trim() || '' })
     };
 
-    return this.storage.update(id, cleanUpdateData);
+    return await CategorySchema.findByIdAndUpdate(id, cleanUpdateData, { new: true, ...options });
   }
 
   async findByIdAndDelete(id) {
-    return this.storage.delete(id);
+    return await CategorySchema.findByIdAndDelete(id);
   }
 
   async countDocuments() {
-    return this.storage.findAll().length;
+    return await CategorySchema.countDocuments();
   }
 
   async insertMany(categories) {
-    const results = [];
-    for (const categoryData of categories) {
-      try {
-        const result = await this.save(categoryData);
-        results.push(result);
-      } catch (error) {
-        console.error('Error inserting category:', error);
-      }
-    }
-    return results;
+    return await CategorySchema.insertMany(categories);
   }
 }
 

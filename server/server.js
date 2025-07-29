@@ -4,9 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
+const connectDB = require('./utils/database');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // CORS configuration - whitelist allowed origins for frontend requests
 const allowedOrigins = [
@@ -86,20 +90,8 @@ app.use((error, req, res, next) => {
   res.status(500).json({ message: error.message });
 });
 
-// Initialize JSON data storage (replaces MongoDB connection)
-const initializeData = async () => {
-  try {
-    console.log('JSON data storage initialized');
-  } catch (err) {
-    console.error('Error initializing data storage:', err);
-  }
-};
-
-// Initialize data on startup
-initializeData();
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Admin key: ${process.env.ADMIN_KEY}`);
+  console.log(`Admin key: ${process.env.ADMIN_KEY || 'Not set'}`);
 });
